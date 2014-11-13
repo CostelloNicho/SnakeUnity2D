@@ -1,12 +1,13 @@
 ﻿// Copyright 2014 Nicholas Costello <NicholasJCostello@gmail.com>
 
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Enums;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class Snake : MonoBehaviour
+    public class Snake : Singleton<Snake>
     {
         //Head of the Snake
         public HeadSegment Head;
@@ -15,11 +16,14 @@ namespace Assets.Scripts
         public GameObject BodySegment;
 
         //Queue of segments
-        public Queue<BodySegment> Body;
+        public List<BodySegment> Body;
 
         //Movement Variables
-        public float MoveTime = 1f;
+        public float MoveTime = 0.3f;
         private float _timeTillNextMove;
+
+        //Starting
+        public int StartingSegmentsCount = 3;
 
 
         /// <summary>
@@ -27,7 +31,7 @@ namespace Assets.Scripts
         /// </summary>
         protected void Awake()
         {
-            Body = new Queue<BodySegment>();
+            Body = new List<BodySegment>();
         }
 
         /// <summary>
@@ -37,25 +41,22 @@ namespace Assets.Scripts
         {
             _timeTillNextMove = MoveTime;
 
-            var startingSegments = FindObjectsOfType<BodySegment>();
-            for (var i = 0; i < startingSegments.Length; ++i)
+            for (var i = 0; i < StartingSegmentsCount; ++i)
             {
-                var segmentPosition = Head.transform.position;
-                segmentPosition.x -= i+1;
-                startingSegments[i].transform.position = segmentPosition;
-                Body.Enqueue(startingSegments[i]);
+                AddSegment();
             }
         }
 
         /// <summary>
         /// Add Segment
         /// </summary>
-        private void AddSegment()
+        public void AddSegment()
         {
+            Vector3 segmentPosition = Body.Count < 1 ? Head.PreviousPosition : Body.Last().PreviousPosition;
             var segmentGo = Instantiate(BodySegment) as GameObject;
             var segment = segmentGo.GetComponent<BodySegment>();
-            segment.MoveSegment(Body.Peek().PreviousPosition);
-            Body.Enqueue(segment);
+            segment.MoveSegment(segmentPosition);
+            Body.Add(segment);
         }
 
 
@@ -77,7 +78,9 @@ namespace Assets.Scripts
             }
         }
 
-        // Update is called once per frame
+        /// <summary>
+        /// Update
+        /// </summary>
         protected void Update()
         {
             if (_timeTillNextMove > 0)

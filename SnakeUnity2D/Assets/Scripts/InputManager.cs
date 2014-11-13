@@ -21,13 +21,13 @@ namespace Assets.Scripts
             bool up = Input.GetKeyDown(KeyCode.UpArrow);
             bool down = Input.GetKeyDown(KeyCode.DownArrow);
 
-            if (right && CurrentInputDirection != Direction.Left)
+            if (right && Snake.Instance.Head.SegmentDirection != Direction.Left)
                 CurrentInputDirection = Direction.Right;
-            else if (left && CurrentInputDirection != Direction.Right)
+            else if (left && Snake.Instance.Head.SegmentDirection != Direction.Right)
                 CurrentInputDirection = Direction.Left;
-            else if (up && CurrentInputDirection != Direction.Down)
+            else if (up && Snake.Instance.Head.SegmentDirection != Direction.Down)
                 CurrentInputDirection = Direction.Up;
-            else if (down && CurrentInputDirection != Direction.Up)
+            else if (down && Snake.Instance.Head.SegmentDirection != Direction.Up)
                 CurrentInputDirection = Direction.Down;
         }
     }

@@ -41,5 +41,16 @@ namespace Assets.Scripts
             PreviousPosition = transform.position;
             transform.position = headPostion;
         }
+
+        public void OnTriggerEnter2D(Collider2D other)
+        {
+            Debug.Log("On Trigger Enter");
+            if (other.tag == "Mouse")
+            {
+                Snake.Instance.AddSegment();
+                Destroy(other.gameObject);
+                Spawner.Instance.SpawnMouse();
+            }
+        }
     }
 }
