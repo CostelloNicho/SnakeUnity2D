@@ -2,20 +2,23 @@
 
 using System;
 using Assets.Scripts.Enums;
+using Assets.Scripts.Managers;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Classes
 {
     public class HeadSegment : MonoBehaviour
     {
         public Vector3 PreviousPosition;
-        public float Radius;
+        public float Width;
+        public float Height;
 
         public Direction SegmentDirection { get; set; }
 
         protected void Start()
         {
-            Radius = GetComponent<CircleCollider2D>().radius;
+            Width = GetComponent<BoxCollider2D>().bounds.size.x;
+            Height = GetComponent<BoxCollider2D>().bounds.size.y;
         }
 
         /// <summary>

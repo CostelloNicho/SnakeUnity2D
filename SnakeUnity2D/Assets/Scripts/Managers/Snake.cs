@@ -1,25 +1,27 @@
 ﻿// Copyright 2014 Nicholas Costello <NicholasJCostello@gmail.com>
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Classes;
 using Assets.Scripts.Enums;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Managers
 {
     public class Snake : Singleton<Snake>
     {
         //Head of the Snake
+        public HeadSegment Head;
 
-        //Queue of segments
+        //Segments
         public List<BodySegment> Body;
         public GameObject BodySegment;
-        public HeadSegment Head;
 
         //Movement Variables
         public float MoveTime = 0.3f;
 
-        //Starting
+        private readonly Vector3 _startPosition = Vector3.zero;
         public int StartingSegmentsCount = 3;
         private float _timeTillNextMove;
 
@@ -36,12 +38,19 @@ namespace Assets.Scripts
         /// </summary>
         protected void Start()
         {
-            _timeTillNextMove = MoveTime;
+            InitializeSnake();
+        }
 
+        public void InitializeSnake()
+        {
+            Head.transform.position = _startPosition;
+            foreach (BodySegment bodySegment in Body)
+                Destroy(bodySegment.gameObject);
+            Body.Clear();
+            _timeTillNextMove = MoveTime;
             for (int i = 0; i < StartingSegmentsCount; ++i)
-            {
                 AddSegment();
-            }
+            StartCoroutine(MovementTimer());
         }
 
         /// <summary>
@@ -64,9 +73,7 @@ namespace Assets.Scripts
         private void MoveSegments(Direction headDirection)
         {
             Head.MoveHead(headDirection);
-
             if (Body.Count <= 0) return;
-
             Vector3 previousPosition = Head.PreviousPosition;
             foreach (BodySegment bodySegment in Body)
             {
@@ -75,31 +82,46 @@ namespace Assets.Scripts
             }
         }
 
+        protected IEnumerator MovementTimer()
+        {
+            while (enabled)
+            {
+                if (_timeTillNextMove > 0)
+                {
+                    _timeTillNextMove -= Time.deltaTime;
+                }
+                else
+                {
+                    MoveSegments(InputManager.Instance.CurrentInputDirection);
+                    _timeTillNextMove = MoveTime;
+                }
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
         /// <summary>
         /// Update
         /// </summary>
         protected void Update()
         {
-            if (_timeTillNextMove > 0)
-            {
-                _timeTillNextMove -= Time.deltaTime;
-            }
-            else
-            {
-                MoveSegments(InputManager.Instance.CurrentInputDirection);
-                _timeTillNextMove = MoveTime;
-            }
-
             //Using half heights because we are working with a 4 coordinate plane,
             //the center of the screen in 0,0;
-            bool hasHitTop = Head.transform.position.y > ResolutionManager.HalfHeight + Head.Radius*2 ||
-                             Head.transform.position.y < -ResolutionManager.HalfHeight - Head.Radius*2;
-            bool hasHitSide = Head.transform.position.x > ResolutionManager.HalfWidth + Head.Radius ||
-                              Head.transform.position.x < -ResolutionManager.HalfHeight - Head.Radius;
+            bool hasHitTop = Head.transform.position.y > ResolutionManager.HalfHeight - Head.Height ||
+                             Head.transform.position.y < -ResolutionManager.HalfHeight + Head.Height;
+            bool hasHitSide = Head.transform.position.x > ResolutionManager.HalfWidth - Head.Width ||
+                              Head.transform.position.x < -ResolutionManager.HalfWidth + Head.Width;
+
             if (hasHitTop || hasHitSide)
             {
-                Debug.Log("DEAD");
+                GameOver();
             }
         }
+
+        private void GameOver()
+        {
+            StopAllCoroutines();
+            UiManager.Instance.DisplayGameOver();
+        }
+
     }
 }

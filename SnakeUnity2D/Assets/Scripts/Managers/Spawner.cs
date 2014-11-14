@@ -1,19 +1,15 @@
 ﻿// Copyright 2014 Nicholas Costello <NicholasJCostello@gmail.com>
 
-using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Managers
 {
     public class Spawner : Singleton<Spawner>
     {
         // prefab to spawn
-
         //buffer around the edge of the screen where nothing can spawn
-        private const float EdgeBufferZone = 1;
+        private const float EdgeBufferZone = 0.5f;
         public GameObject MousePrefab;
-
 
         // Use this for initialization
         protected void Start()
@@ -21,7 +17,10 @@ namespace Assets.Scripts
             SpawnMouse();
         }
 
-        // Update is called once per frame
+        /// <summary>
+        /// Spawn Mouse
+        ///     Spawn a mouse within the camera's view
+        /// </summary>
         public void SpawnMouse()
         {
             float x = Random.Range(
@@ -32,9 +31,9 @@ namespace Assets.Scripts
                 -(ResolutionManager.HalfHeight - EdgeBufferZone),
                 ResolutionManager.HalfHeight - EdgeBufferZone
                 );
-             x = (float)Math.Round(x*2, MidpointRounding.AwayFromZero)/2;
-             y = (float)Math.Round(y * 2, MidpointRounding.AwayFromZero) / 2;
-            var spawnLocation = new Vector3(Mathf.CeilToInt(x), Mathf.CeilToInt(y), 0f);
+            x = Mathf.Round(x*2)/2;
+            y = Mathf.Round(y*2)/2;
+            var spawnLocation = new Vector3(x, y, 0f);
             Instantiate(MousePrefab, spawnLocation, Quaternion.identity);
         }
     }

@@ -1,10 +1,8 @@
 ﻿// Copyright 2014 Nicholas Costello <NicholasJCostello@gmail.com>
 
-using System;
-using Assets.Scripts.Enums;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Classes
 {
     public class BodySegment : MonoBehaviour
     {

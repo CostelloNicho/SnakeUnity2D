@@ -11,7 +11,7 @@ GameObject:
   - 212: {fileID: 21200000}
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400000}
-  - 58: {fileID: 5800000}
+  - 61: {fileID: 6100000}
   m_Layer: 0
   m_Name: Head
   m_TagString: Player
@@ -31,16 +31,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!58 &5800000
-CircleCollider2D:
+--- !u!61 &6100000
+BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Radius: .347499996
+  m_IsTrigger: 0
+  m_Size: {x: .319999993, y: .319999993}
   m_Center: {x: 0, y: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -54,6 +54,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PreviousPosition: {x: 0, y: 0, z: 0}
+  Width: 0
+  Height: 0
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -65,9 +67,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a578d6c2dbd2c94a9c7a4c9c8884d15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Body: []
+  BodySegment: {fileID: 100000, guid: 15525d3877ba7dc45a31a0a8fda74654, type: 2}
   Head: {fileID: 11400000}
-  BodySegment: {fileID: 0}
-  MoveTime: .610000014
+  MoveTime: .00999999978
+  StartingSegmentsCount: 3
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -88,7 +92,7 @@ SpriteRenderer:
   m_ScaleInLightmap: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 4f915be71076f284ab18a030d2cd557e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3f60dd1764eaaf34f8ae6e4e040defab, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &100100000
 Prefab:
