@@ -10,21 +10,18 @@ namespace Assets.Scripts
     public class Snake : Singleton<Snake>
     {
         //Head of the Snake
-        public HeadSegment Head;
-        
-        //Body Segment Prefabs
-        public GameObject BodySegment;
 
         //Queue of segments
         public List<BodySegment> Body;
+        public GameObject BodySegment;
+        public HeadSegment Head;
 
         //Movement Variables
         public float MoveTime = 0.3f;
-        private float _timeTillNextMove;
 
         //Starting
         public int StartingSegmentsCount = 3;
-
+        private float _timeTillNextMove;
 
         /// <summary>
         /// Awake
@@ -41,7 +38,7 @@ namespace Assets.Scripts
         {
             _timeTillNextMove = MoveTime;
 
-            for (var i = 0; i < StartingSegmentsCount; ++i)
+            for (int i = 0; i < StartingSegmentsCount; ++i)
             {
                 AddSegment();
             }
@@ -70,8 +67,8 @@ namespace Assets.Scripts
 
             if (Body.Count <= 0) return;
 
-            var previousPosition = Head.PreviousPosition;
-            foreach (var bodySegment in Body)
+            Vector3 previousPosition = Head.PreviousPosition;
+            foreach (BodySegment bodySegment in Body)
             {
                 bodySegment.MoveSegment(previousPosition);
                 previousPosition = bodySegment.PreviousPosition;
@@ -91,6 +88,17 @@ namespace Assets.Scripts
             {
                 MoveSegments(InputManager.Instance.CurrentInputDirection);
                 _timeTillNextMove = MoveTime;
+            }
+
+            //Using half heights because we are working with a 4 coordinate plane,
+            //the center of the screen in 0,0;
+            bool hasHitTop = Head.transform.position.y > ResolutionManager.HalfHeight + Head.Radius*2 ||
+                             Head.transform.position.y < -ResolutionManager.HalfHeight - Head.Radius*2;
+            bool hasHitSide = Head.transform.position.x > ResolutionManager.HalfWidth + Head.Radius ||
+                              Head.transform.position.x < -ResolutionManager.HalfHeight - Head.Radius;
+            if (hasHitTop || hasHitSide)
+            {
+                Debug.Log("DEAD");
             }
         }
     }
