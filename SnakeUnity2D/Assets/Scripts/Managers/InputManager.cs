@@ -79,6 +79,9 @@ namespace Assets.Scripts.Managers
                     case TouchPhase.Began:
                         _touchStart = touch.position;
                         _touchTime = Time.time;
+						if (!UiManager.Instance.IsGameOver) return;
+						Snake.Instance.InitializeSnake();
+						UiManager.Instance.InitializeHud();
                         break;
 
                         //If the user is touching the ball release it from

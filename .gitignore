@@ -30,6 +30,30 @@ build/
 _ReSharper*/
 *.[Rr]e[Ss]harper
 
+*_i.c
+*_p.c
+*.ilk
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.log
+*.scc
+
+
 #Unity3D Generated File On Crash Reports
 sysinfo.txt
 
