@@ -22,7 +22,6 @@ namespace Assets.Scripts.Managers
         public float MoveTime = 0.3f;
 
         private readonly Vector3 _startPosition = Vector3.zero;
-        public int StartingSegmentsCount = 3;
         private float _timeTillNextMove;
 
         /// <summary>
@@ -48,8 +47,6 @@ namespace Assets.Scripts.Managers
                 Destroy(bodySegment.gameObject);
             Body.Clear();
             _timeTillNextMove = MoveTime;
-            for (int i = 0; i < StartingSegmentsCount; ++i)
-                AddSegment();
             StartCoroutine(MovementTimer());
         }
 
@@ -110,8 +107,9 @@ namespace Assets.Scripts.Managers
                              Head.transform.position.y < -ResolutionManager.HalfHeight + Head.Height;
             bool hasHitSide = Head.transform.position.x > ResolutionManager.HalfWidth - Head.Width ||
                               Head.transform.position.x < -ResolutionManager.HalfWidth + Head.Width;
+			bool hasHitbody = Body.Any(segment => segment.transform.position == Head.transform.position);
 
-            if (hasHitTop || hasHitSide)
+            if (hasHitTop || hasHitSide || hasHitbody)
             {
                 GameOver();
             }

@@ -53,7 +53,6 @@ namespace Assets.Scripts.Classes
 
         public void OnTriggerEnter2D(Collider2D other)
         {
-            Debug.Log("On Trigger Enter");
             if (other.tag == "Mouse")
             {
                 UiManager.Instance.PlayerScored();

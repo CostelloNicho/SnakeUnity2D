@@ -547,7 +547,6 @@ MonoBehaviour:
   Body: []
   BodySegment: {fileID: 100000, guid: 15525d3877ba7dc45a31a0a8fda74654, type: 2}
   MoveTime: .100000001
-  StartingSegmentsCount: 3
 --- !u!61 &1161142356
 BoxCollider2D:
   m_ObjectHideFlags: 0
