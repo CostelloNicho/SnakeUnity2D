@@ -105,8 +105,8 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -80, y: -15}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: -160, y: -30}
+  m_SizeDelta: {x: 320, y: 60}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &39309376
 MonoBehaviour:
@@ -243,8 +243,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 80, y: -15}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 160, y: -30}
+  m_SizeDelta: {x: 320, y: 60}
   m_Pivot: {x: .5, y: .5}
 --- !u!1 &1047773589
 GameObject:
@@ -278,7 +278,7 @@ RectTransform:
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
   m_AnchoredPosition: {x: 1.90734863e-06, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 320, y: 60}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1047773591
 MonoBehaviour:
@@ -300,12 +300,14 @@ MonoBehaviour:
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 4
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Game Over
+  m_Text: 'Game Over
+
+    Press ''space'' to restart'
 --- !u!222 &1047773592
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -417,11 +419,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3b65465eaad804693f6bd34aee0961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameOverUi: {fileID: 1253226315}
   HudScoreText: {fileID: 953440695}
   HudTimeText: {fileID: 39309376}
-  GameOverUi: {fileID: 1253226315}
   IsGameOver: 0
-  PointsPerMouse: 100
 --- !u!1 &1139418919
 GameObject:
   m_ObjectHideFlags: 0

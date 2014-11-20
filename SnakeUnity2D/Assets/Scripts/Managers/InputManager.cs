@@ -40,10 +40,10 @@ namespace Assets.Scripts.Managers
         /// </summary>
         protected void PollKeyboardInput()
         {
-            bool right = Input.GetKeyDown(KeyCode.RightArrow);
-            bool left = Input.GetKeyDown(KeyCode.LeftArrow);
-            bool up = Input.GetKeyDown(KeyCode.UpArrow);
-            bool down = Input.GetKeyDown(KeyCode.DownArrow);
+            var right = Input.GetKeyDown(KeyCode.RightArrow);
+            var left = Input.GetKeyDown(KeyCode.LeftArrow);
+            var up = Input.GetKeyDown(KeyCode.UpArrow);
+            var down = Input.GetKeyDown(KeyCode.DownArrow);
 
             if (right && Snake.Instance.Head.SegmentDirection != Direction.Left)
                 CurrentInputDirection = Direction.Right;
@@ -67,49 +67,47 @@ namespace Assets.Scripts.Managers
         /// </summary>
         protected void PollTouchInput()
         {
-            if (Input.touchCount > 0)
+            if (Input.touchCount <= 0) return;
+            //only grab the first touch as we are not dealing with multitouch
+            var touch = Input.touches[0];
+
+            switch (touch.phase)
             {
-                //only grab the first touch as we are not dealing with multitouch
-                Touch touch = Input.touches[0];
+                    //on begin of a single touch get the position a time 
+                    //as well as check for an object being touched
+                case TouchPhase.Began:
+                    _touchStart = touch.position;
+                    _touchTime = Time.time;
+                    if (!UiManager.Instance.IsGameOver) return;
+                    Snake.Instance.InitializeSnake();
+                    UiManager.Instance.InitializeHud();
+                    break;
 
-                switch (touch.phase)
-                {
-                        //on begin of a single touch get the position a time 
-                        //as well as check for an object being touched
-                    case TouchPhase.Began:
-                        _touchStart = touch.position;
-                        _touchTime = Time.time;
-						if (!UiManager.Instance.IsGameOver) return;
-						Snake.Instance.InitializeSnake();
-						UiManager.Instance.InitializeHud();
-                        break;
+                    //If the user is touching the ball release it from
+                    //the character and start following their touch
+                case TouchPhase.Moved:
+                    break;
 
-                        //If the user is touching the ball release it from
-                        //the character and start following their touch
-                    case TouchPhase.Moved:
-                        break;
+                    //Not implementing a stationary gensture
+                    //Idea: if user is touching the character have him wave.
+                case TouchPhase.Stationary:
+                    break;
 
-                        //Not implementing a stationary gensture
-                        //Idea: if user is touching the character have him wave.
-                    case TouchPhase.Stationary:
-                        break;
+                    //When the touch ends we need to calculate if it were a swipe, that is
+                    // only if the player was not holding the ball, in that case we want 
+                    // to just release the ball.
+                case TouchPhase.Ended:
+                    _touchEnd = touch.position;
+                    _touchTime = Time.time - _touchTime;
 
-                        //When the touch ends we need to calculate if it were a swipe, that is
-                        // only if the player was not holding the ball, in that case we want 
-                        // to just release the ball.
-                    case TouchPhase.Ended:
-                        _touchEnd = touch.position;
-                        _touchTime = Time.time - _touchTime;
+                    HandleInputEnded();
+                    break;
 
-                        HandleInputEnded();
-                        break;
-
-                        // Reset the touch variables
-                    case TouchPhase.Canceled:
-                        _touchEnd = Vector3.zero;
-                        _touchTime = 0f;
-                        break;
-                }
+                    // Reset the touch variables
+                case TouchPhase.Canceled:
+                    _touchEnd = Vector3.zero;
+                    _touchTime = 0f;
+                    break;
             }
         }
 
@@ -118,7 +116,7 @@ namespace Assets.Scripts.Managers
         /// </summary>
         private void HandleInputEnded()
         {
-            Direction dir = CurrentInputDirection;
+            var dir = CurrentInputDirection;
 
             if (CheckForSwipe()) // if it is a swipe
             {
@@ -153,9 +151,7 @@ namespace Assets.Scripts.Managers
         /// <returns></returns>
         private bool CheckForSwipe()
         {
-            if (_touchTime > MinSwipeTime && _touchTime < MaxSwipeTime)
-                return true;
-            return false;
+            return _touchTime > MinSwipeTime && _touchTime < MaxSwipeTime;
         }
     }
 }
