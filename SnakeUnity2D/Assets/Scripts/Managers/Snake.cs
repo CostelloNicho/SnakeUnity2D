@@ -60,6 +60,7 @@ namespace Assets.Scripts.Managers
             var segment = segmentGo.GetComponent<BodySegment>();
             segment.MoveSegment(segmentPosition);
             Body.Add(segment);
+			MoveTime = MoveTime - 0.003f;
         }
 
 

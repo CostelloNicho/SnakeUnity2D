@@ -14,7 +14,7 @@ namespace Assets.Scripts.Managers
         // Use this for initialization
         protected void Start()
         {
-            SpawnMouse();
+			SpawnMouse();
         }
 
         /// <summary>

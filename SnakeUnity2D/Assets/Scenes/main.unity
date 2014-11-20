@@ -720,6 +720,10 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: b12db1bbe72ecb44183533b71aca8b9d, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b12db1bbe72ecb44183533b71aca8b9d, type: 2}
   m_RootGameObject: {fileID: 1161142351}
