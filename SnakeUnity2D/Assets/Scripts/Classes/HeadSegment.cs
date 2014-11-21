@@ -19,15 +19,15 @@ namespace Assets.Scripts.Classes
         {
             Width = GetComponent<BoxCollider2D>().bounds.size.x;
             Height = GetComponent<BoxCollider2D>().bounds.size.y;
+            InputManager.Instance.DirectionChanged += HandleChangeOfDirection;
         }
 
         /// <summary>
         /// Move the head of the snake according to the user input
         /// </summary>
         /// <param name="direction"></param>
-        public void MoveHead(Direction direction)
+        public void MoveHead()
         {
-            SegmentDirection = direction;
             PreviousPosition = transform.position;
             Vector3 headPostion = PreviousPosition;
             switch (SegmentDirection)
@@ -59,6 +59,31 @@ namespace Assets.Scripts.Classes
                 Snake.Instance.AddSegment();
                 Destroy(other.gameObject);
                 Spawner.Instance.SpawnMouse();
+            }
+        }
+
+        protected void HandleChangeOfDirection(object sender, SnakeInputEventArgs eventArgs)
+        {
+            switch (eventArgs.Direction)
+            {
+                case Direction.Right:
+                    if(SegmentDirection != Direction.Left)
+                        SegmentDirection = Direction.Right;
+                    break;
+                case Direction.Left:
+                    if (SegmentDirection != Direction.Right)
+                        SegmentDirection = Direction.Left;
+                    break;
+                case Direction.Up:
+                    if (SegmentDirection != Direction.Down)
+                        SegmentDirection = Direction.Up;
+                    break;
+                case Direction.Down:
+                    if (SegmentDirection != Direction.Up)
+                        SegmentDirection = Direction.Down;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

@@ -63,14 +63,13 @@ namespace Assets.Scripts.Managers
 			MoveTime = MoveTime - 0.003f;
         }
 
-
         /// <summary>
         /// Move Segments
         /// </summary>
         /// <param name="headDirection"></param>
-        private void MoveSegments(Direction headDirection)
+        private void MoveSegments()
         {
-            Head.MoveHead(headDirection);
+            Head.MoveHead();
             if (Body.Count <= 0) return;
             Vector3 previousPosition = Head.PreviousPosition;
             foreach (BodySegment bodySegment in Body)
@@ -90,7 +89,7 @@ namespace Assets.Scripts.Managers
                 }
                 else
                 {
-                    MoveSegments(InputManager.Instance.CurrentInputDirection);
+                    MoveSegments();
                     _timeTillNextMove = MoveTime;
                 }
                 yield return new WaitForEndOfFrame();

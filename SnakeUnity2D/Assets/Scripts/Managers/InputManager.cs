@@ -1,12 +1,17 @@
 ﻿// Copyright 2014 Nicholas Costello <NicholasJCostello@gmail.com>
 
+using System;
 using Assets.Scripts.Enums;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.Managers
 {
-    internal class InputManager : Singleton<InputManager>
+    public class InputManager : Singleton<InputManager>
     {
+
+        public event EventHandler<SnakeInputEventArgs> DirectionChanged;
+
         //Touch Variables
         private const float MinSwipeTime = 0.06f;
         private const float MaxSwipeTime = 1.0f;
@@ -45,19 +50,28 @@ namespace Assets.Scripts.Managers
             var up = Input.GetKeyDown(KeyCode.UpArrow);
             var down = Input.GetKeyDown(KeyCode.DownArrow);
 
-            if (right && Snake.Instance.Head.SegmentDirection != Direction.Left)
+            if (right)
                 CurrentInputDirection = Direction.Right;
-            else if (left && Snake.Instance.Head.SegmentDirection != Direction.Right)
+            else if (left)
                 CurrentInputDirection = Direction.Left;
-            else if (up && Snake.Instance.Head.SegmentDirection != Direction.Down)
+            else if (up)
                 CurrentInputDirection = Direction.Up;
-            else if (down && Snake.Instance.Head.SegmentDirection != Direction.Up)
+            else if (down)
                 CurrentInputDirection = Direction.Down;
+            OnDirectionChange();
 
             if (!UiManager.Instance.IsGameOver) return;
             if (!Input.GetKeyDown(KeyCode.Space)) return;
             Snake.Instance.InitializeSnake();
             UiManager.Instance.InitializeHud();
+        }
+
+        protected void OnDirectionChange()
+        {
+            if (DirectionChanged != null)
+            {
+                DirectionChanged(this, new SnakeInputEventArgs(CurrentInputDirection));
+            }
         }
 
         /// <summary>
@@ -134,14 +148,15 @@ namespace Assets.Scripts.Managers
             }
 
 
-            if (dir == Direction.Right && Snake.Instance.Head.SegmentDirection != Direction.Left)
+            if (dir == Direction.Right)
                 CurrentInputDirection = Direction.Right;
-            else if (dir == Direction.Left && Snake.Instance.Head.SegmentDirection != Direction.Right)
+            else if (dir == Direction.Left)
                 CurrentInputDirection = Direction.Left;
-            else if (dir == Direction.Up && Snake.Instance.Head.SegmentDirection != Direction.Down)
+            else if (dir == Direction.Up)
                 CurrentInputDirection = Direction.Up;
-            else if (dir == Direction.Down && Snake.Instance.Head.SegmentDirection != Direction.Up)
+            else if (dir == Direction.Down)
                 CurrentInputDirection = Direction.Down;
+            OnDirectionChange();
         }
 
         /// <summary>
