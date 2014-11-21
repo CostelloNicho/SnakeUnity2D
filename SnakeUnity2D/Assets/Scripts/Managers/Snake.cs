@@ -19,7 +19,8 @@ namespace Assets.Scripts.Managers
         public GameObject BodySegment;
 
         //Movement Variables
-        public float MoveTime = 0.3f;
+		public float StartMoveTime = 0.3f;
+		private float _currentMoveTime;
 
         private readonly Vector3 _startPosition = Vector3.zero;
         private float _timeTillNextMove;
@@ -32,11 +33,9 @@ namespace Assets.Scripts.Managers
             Body = new List<BodySegment>();
         }
 
-        /// <summary>
-        /// Start
-        /// </summary>
         protected void Start()
         {
+			_currentMoveTime = StartMoveTime;
             InitializeSnake();
         }
 
@@ -46,13 +45,11 @@ namespace Assets.Scripts.Managers
             foreach (BodySegment bodySegment in Body)
                 Destroy(bodySegment.gameObject);
             Body.Clear();
-            _timeTillNextMove = MoveTime;
+			_currentMoveTime = StartMoveTime;
+            _timeTillNextMove = _currentMoveTime;
             StartCoroutine(MovementTimer());
         }
 
-        /// <summary>
-        /// Add Segment
-        /// </summary>
         public void AddSegment()
         {
             Vector3 segmentPosition = Body.Count < 1 ? Head.PreviousPosition : Body.Last().PreviousPosition;
@@ -60,7 +57,7 @@ namespace Assets.Scripts.Managers
             var segment = segmentGo.GetComponent<BodySegment>();
             segment.MoveSegment(segmentPosition);
             Body.Add(segment);
-			MoveTime = MoveTime - 0.003f;
+			_currentMoveTime = _currentMoveTime - 0.003f;
         }
 
         /// <summary>
