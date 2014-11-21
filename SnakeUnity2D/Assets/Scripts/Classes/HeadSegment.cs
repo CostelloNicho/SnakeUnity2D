@@ -13,10 +13,13 @@ namespace Assets.Scripts.Classes
         public float Width;
         public float Height;
 
-        public Direction SegmentDirection { get; set; }
+        private Direction SegmentDirection { get; set; }
+        private Direction NextSegmentDireciton { get; set; }
 
         protected void Start()
         {
+            SegmentDirection = Direction.Right;
+            NextSegmentDireciton = Direction.Right;
             Width = GetComponent<BoxCollider2D>().bounds.size.x;
             Height = GetComponent<BoxCollider2D>().bounds.size.y;
             InputManager.Instance.DirectionChanged += HandleChangeOfDirection;
@@ -28,6 +31,7 @@ namespace Assets.Scripts.Classes
         /// <param name="direction"></param>
         public void MoveHead()
         {
+            SegmentDirection = NextSegmentDireciton;
             PreviousPosition = transform.position;
             Vector3 headPostion = PreviousPosition;
             switch (SegmentDirection)
@@ -68,19 +72,19 @@ namespace Assets.Scripts.Classes
             {
                 case Direction.Right:
                     if(SegmentDirection != Direction.Left)
-                        SegmentDirection = Direction.Right;
+                        NextSegmentDireciton = Direction.Right;
                     break;
                 case Direction.Left:
                     if (SegmentDirection != Direction.Right)
-                        SegmentDirection = Direction.Left;
+                        NextSegmentDireciton = Direction.Left;
                     break;
                 case Direction.Up:
                     if (SegmentDirection != Direction.Down)
-                        SegmentDirection = Direction.Up;
+                        NextSegmentDireciton = Direction.Up;
                     break;
                 case Direction.Down:
                     if (SegmentDirection != Direction.Up)
-                        SegmentDirection = Direction.Down;
+                        NextSegmentDireciton = Direction.Down;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

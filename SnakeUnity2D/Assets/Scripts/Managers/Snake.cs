@@ -4,30 +4,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Classes;
-using Assets.Scripts.Enums;
 using UnityEngine;
 
 namespace Assets.Scripts.Managers
 {
     public class Snake : Singleton<Snake>
     {
-        //Head of the Snake
-        public HeadSegment Head;
-
-        //Segments
+        private readonly Vector3 _startPosition = Vector3.zero;
         public List<BodySegment> Body;
         public GameObject BodySegment;
+        public HeadSegment Head;
+        public float StartMoveTime = 0.3f;
 
-        //Movement Variables
-		public float StartMoveTime = 0.3f;
-		private float _currentMoveTime;
-
-        private readonly Vector3 _startPosition = Vector3.zero;
+        private float _currentMoveTime;
         private float _timeTillNextMove;
 
-        /// <summary>
-        /// Awake
-        /// </summary>
         protected void Awake()
         {
             Body = new List<BodySegment>();
@@ -35,7 +26,7 @@ namespace Assets.Scripts.Managers
 
         protected void Start()
         {
-			_currentMoveTime = StartMoveTime;
+            _currentMoveTime = StartMoveTime;
             InitializeSnake();
         }
 
@@ -45,30 +36,26 @@ namespace Assets.Scripts.Managers
             foreach (BodySegment bodySegment in Body)
                 Destroy(bodySegment.gameObject);
             Body.Clear();
-			_currentMoveTime = StartMoveTime;
+            _currentMoveTime = StartMoveTime;
             _timeTillNextMove = _currentMoveTime;
             StartCoroutine(MovementTimer());
         }
 
         public void AddSegment()
         {
-            Vector3 segmentPosition = Body.Count < 1 ? Head.PreviousPosition : Body.Last().PreviousPosition;
+            var segmentPosition = Body.Count < 1 ? Head.PreviousPosition : Body.Last().PreviousPosition;
             var segmentGo = Instantiate(BodySegment) as GameObject;
             var segment = segmentGo.GetComponent<BodySegment>();
             segment.MoveSegment(segmentPosition);
             Body.Add(segment);
-			_currentMoveTime = _currentMoveTime - 0.003f;
+            _currentMoveTime = _currentMoveTime - 0.003f;
         }
 
-        /// <summary>
-        /// Move Segments
-        /// </summary>
-        /// <param name="headDirection"></param>
         private void MoveSegments()
         {
             Head.MoveHead();
             if (Body.Count <= 0) return;
-            Vector3 previousPosition = Head.PreviousPosition;
+            var previousPosition = Head.PreviousPosition;
             foreach (BodySegment bodySegment in Body)
             {
                 bodySegment.MoveSegment(previousPosition);
@@ -87,24 +74,21 @@ namespace Assets.Scripts.Managers
                 else
                 {
                     MoveSegments();
-                    _timeTillNextMove = MoveTime;
+                    _timeTillNextMove = StartMoveTime;
                 }
                 yield return new WaitForEndOfFrame();
             }
         }
 
-        /// <summary>
-        /// Update
-        /// </summary>
         protected void Update()
         {
             //Using half heights because we are working with a 4 coordinate plane,
             //the center of the screen in 0,0;
-            bool hasHitTop = Head.transform.position.y > ResolutionManager.HalfHeight - Head.Height ||
-                             Head.transform.position.y < -ResolutionManager.HalfHeight + Head.Height;
-            bool hasHitSide = Head.transform.position.x > ResolutionManager.HalfWidth - Head.Width ||
-                              Head.transform.position.x < -ResolutionManager.HalfWidth + Head.Width;
-			bool hasHitbody = Body.Any(segment => segment.transform.position == Head.transform.position);
+            var hasHitTop = Head.transform.position.y > ResolutionManager.HalfHeight - Head.Height ||
+                            Head.transform.position.y < -ResolutionManager.HalfHeight + Head.Height;
+            var hasHitSide = Head.transform.position.x > ResolutionManager.HalfWidth - Head.Width ||
+                             Head.transform.position.x < -ResolutionManager.HalfWidth + Head.Width;
+            var hasHitbody = Body.Any(segment => segment.transform.position == Head.transform.position);
 
             if (hasHitTop || hasHitSide || hasHitbody)
             {
@@ -117,6 +101,5 @@ namespace Assets.Scripts.Managers
             StopAllCoroutines();
             UiManager.Instance.DisplayGameOver();
         }
-
     }
 }

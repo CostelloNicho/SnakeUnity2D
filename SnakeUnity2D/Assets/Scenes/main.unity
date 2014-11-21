@@ -544,9 +544,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a578d6c2dbd2c94a9c7a4c9c8884d15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Head: {fileID: 1161142354}
   Body: []
   BodySegment: {fileID: 100000, guid: 15525d3877ba7dc45a31a0a8fda74654, type: 2}
+  Head: {fileID: 1161142354}
   StartMoveTime: .100000001
 --- !u!61 &1161142356
 BoxCollider2D:
