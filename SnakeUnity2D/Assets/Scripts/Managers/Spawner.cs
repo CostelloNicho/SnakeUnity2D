@@ -1,5 +1,6 @@
 ﻿// Copyright 2014 Nicholas Costello <NicholasJCostello@gmail.com>
 
+using Assets.Scripts.Classes;
 using UnityEngine;
 
 namespace Assets.Scripts.Managers
@@ -8,13 +9,13 @@ namespace Assets.Scripts.Managers
     {
         // prefab to spawn
         //buffer around the edge of the screen where nothing can spawn
-        private const float EdgeBufferZone = 0.5f;
-        public GameObject MousePrefab;
+        public SpawnData SpawnerData;
 
         // Use this for initialization
         protected void Start()
         {
-			SpawnMouse();
+            for (var i = 0; i < SpawnerData.SpawnAmount; ++i)
+                SpawnMouse();
         }
 
         /// <summary>
@@ -23,18 +24,18 @@ namespace Assets.Scripts.Managers
         /// </summary>
         public void SpawnMouse()
         {
-            float x = Random.Range(
-                -(ResolutionManager.HalfWidth - EdgeBufferZone),
-                (ResolutionManager.HalfWidth - EdgeBufferZone)
+            var x = Random.Range(
+                -(ResolutionManager.HalfWidth - SpawnerData.EdgeBufferOffest),
+                (ResolutionManager.HalfWidth - SpawnerData.EdgeBufferOffest)
                 );
-            float y = Random.Range(
-                -(ResolutionManager.HalfHeight - EdgeBufferZone),
-                ResolutionManager.HalfHeight - EdgeBufferZone
+            var y = Random.Range(
+                -(ResolutionManager.HalfHeight - SpawnerData.EdgeBufferOffest),
+                ResolutionManager.HalfHeight - SpawnerData.EdgeBufferOffest
                 );
             x = Mathf.Round(x*2)/2;
             y = Mathf.Round(y*2)/2;
             var spawnLocation = new Vector3(x, y, 0f);
-            Instantiate(MousePrefab, spawnLocation, Quaternion.identity);
+            Instantiate(SpawnerData.SpawnPrefab, spawnLocation, Quaternion.identity);
         }
     }
 }
