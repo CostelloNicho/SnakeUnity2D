@@ -74,7 +74,7 @@ namespace Assets.Scripts.Managers
                 else
                 {
                     MoveSegments();
-                    _timeTillNextMove = StartMoveTime;
+                    _timeTillNextMove = _currentMoveTime;
                 }
                 yield return new WaitForEndOfFrame();
             }

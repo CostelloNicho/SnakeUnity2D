@@ -3,15 +3,11 @@
 using System;
 using Assets.Scripts.Enums;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.Managers
 {
     public class InputManager : Singleton<InputManager>
     {
-
-        public event EventHandler<SnakeInputEventArgs> DirectionChanged;
-
         //Touch Variables
         private const float MinSwipeTime = 0.06f;
         private const float MaxSwipeTime = 1.0f;
@@ -19,6 +15,7 @@ namespace Assets.Scripts.Managers
         private Vector2 _touchEnd;
         private Vector2 _touchStart;
         private float _touchTime;
+        public event EventHandler<SnakeInputEventArgs> DirectionChanged;
 
 
         protected void Start()
@@ -39,10 +36,6 @@ namespace Assets.Scripts.Managers
 #endif
         }
 
-        /// <summary>
-        /// Poll Keyboard Input
-        ///     Poll the keyboard input
-        /// </summary>
         protected void PollKeyboardInput()
         {
             var right = Input.GetKeyDown(KeyCode.RightArrow);
@@ -74,11 +67,6 @@ namespace Assets.Scripts.Managers
             }
         }
 
-        /// <summary>
-        /// PollTouchInput 
-        ///     Coroutine to poll input form the touch device
-        ///     Only runs once per frame
-        /// </summary>
         protected void PollTouchInput()
         {
             if (Input.touchCount <= 0) return;
