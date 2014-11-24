@@ -9,9 +9,9 @@ namespace Assets.Scripts.Classes
 {
     public class HeadSegment : MonoBehaviour
     {
+        public float Height;
         public Vector3 PreviousPosition;
         public float Width;
-        public float Height;
 
         private Direction SegmentDirection { get; set; }
         private Direction NextSegmentDireciton { get; set; }
@@ -22,18 +22,28 @@ namespace Assets.Scripts.Classes
             NextSegmentDireciton = Direction.Right;
             Width = GetComponent<BoxCollider2D>().bounds.size.x;
             Height = GetComponent<BoxCollider2D>().bounds.size.y;
-            InputManager.Instance.DirectionChanged += HandleChangeOfDirection;
+        }
+
+        protected void OnEnable()
+        {
+            Messenger<SnakeInputEventArgs>.AddListener(SnakeEvents.DirectionChanged,
+                HandleChangeOfDirection);
+        }
+
+        protected void OnDisable()
+        {
+            Messenger<SnakeInputEventArgs>.RemoveListener(SnakeEvents.DirectionChanged,
+                HandleChangeOfDirection);
         }
 
         /// <summary>
         /// Move the head of the snake according to the user input
         /// </summary>
-        /// <param name="direction"></param>
         public void MoveHead()
         {
             SegmentDirection = NextSegmentDireciton;
             PreviousPosition = transform.position;
-            Vector3 headPostion = PreviousPosition;
+            var headPostion = PreviousPosition;
             switch (SegmentDirection)
             {
                 case Direction.Right:
@@ -59,19 +69,19 @@ namespace Assets.Scripts.Classes
         {
             if (other.tag == "Mouse")
             {
-                UiManager.Instance.PlayerScored();
+                UiManager.Instance.OnPlayerScored(100);
                 Snake.Instance.AddSegment();
                 Destroy(other.gameObject);
                 Spawner.Instance.SpawnMouse();
             }
         }
 
-        protected void HandleChangeOfDirection(object sender, SnakeInputEventArgs eventArgs)
+        protected void HandleChangeOfDirection(SnakeInputEventArgs eventArgs)
         {
             switch (eventArgs.Direction)
             {
                 case Direction.Right:
-                    if(SegmentDirection != Direction.Left)
+                    if (SegmentDirection != Direction.Left)
                         NextSegmentDireciton = Direction.Right;
                     break;
                 case Direction.Left:

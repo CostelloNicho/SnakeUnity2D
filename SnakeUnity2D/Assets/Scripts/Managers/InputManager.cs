@@ -15,25 +15,10 @@ namespace Assets.Scripts.Managers
         private Vector2 _touchEnd;
         private Vector2 _touchStart;
         private float _touchTime;
-        public event EventHandler<SnakeInputEventArgs> DirectionChanged;
-
 
         protected void Start()
         {
             CurrentInputDirection = Direction.Right;
-        }
-
-        /// <summary>
-        /// Update
-        ///     Begins polling for the appropriate input
-        /// </summary>
-        private void Update()
-        {
-#if UNITY_IPHONE
-                PollTouchInput();
-            #else
-            PollKeyboardInput();
-#endif
         }
 
         protected void PollKeyboardInput()
@@ -53,26 +38,19 @@ namespace Assets.Scripts.Managers
                 CurrentInputDirection = Direction.Down;
             OnDirectionChange();
 
-            if (!UiManager.Instance.IsGameOver) return;
-            if (!Input.GetKeyDown(KeyCode.Space)) return;
-            Snake.Instance.InitializeSnake();
-            UiManager.Instance.InitializeHud();
         }
 
         protected void OnDirectionChange()
         {
-            if (DirectionChanged != null)
-            {
-                DirectionChanged(this, new SnakeInputEventArgs(CurrentInputDirection));
-            }
+           var args = new SnakeInputEventArgs(CurrentInputDirection);
+           Messenger<SnakeInputEventArgs>.Broadcast(
+               SnakeEvents.DirectionChanged, args);
         }
 
         protected void PollTouchInput()
         {
             if (Input.touchCount <= 0) return;
-            //only grab the first touch as we are not dealing with multitouch
             var touch = Input.touches[0];
-
             switch (touch.phase)
             {
                     //on begin of a single touch get the position a time 
@@ -80,9 +58,6 @@ namespace Assets.Scripts.Managers
                 case TouchPhase.Began:
                     _touchStart = touch.position;
                     _touchTime = Time.time;
-                    if (!UiManager.Instance.IsGameOver) return;
-                    Snake.Instance.InitializeSnake();
-                    UiManager.Instance.InitializeHud();
                     break;
 
                     //If the user is touching the ball release it from
@@ -113,9 +88,6 @@ namespace Assets.Scripts.Managers
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         private void HandleInputEnded()
         {
             var dir = CurrentInputDirection;
@@ -126,12 +98,14 @@ namespace Assets.Scripts.Managers
                     Mathf.Abs(_touchStart.y - _touchEnd.y))
                 {
                     Debug.Log("horizontal swipe");
-                    dir = Mathf.Sign(_touchEnd.x - _touchStart.x) > 0 ? Direction.Right : Direction.Left;
+                    dir = Mathf.Sign(_touchEnd.x - _touchStart.x) > 0 
+                        ? Direction.Right : Direction.Left;
                 }
                 else
                 {
                     Debug.Log("verticle swipe");
-                    dir = Mathf.Sign(_touchEnd.y - _touchStart.y) > 0 ? Direction.Up : Direction.Down;
+                    dir = Mathf.Sign(_touchEnd.y - _touchStart.y) > 0 
+                        ? Direction.Up : Direction.Down;
                 }
             }
 
@@ -155,6 +129,16 @@ namespace Assets.Scripts.Managers
         private bool CheckForSwipe()
         {
             return _touchTime > MinSwipeTime && _touchTime < MaxSwipeTime;
+        }
+
+
+        private void Update ()
+        {
+#if UNITY_IPHONE
+                PollTouchInput();
+#else
+            PollKeyboardInput();
+#endif
         }
     }
 }

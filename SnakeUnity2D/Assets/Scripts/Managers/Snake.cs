@@ -18,6 +18,7 @@ namespace Assets.Scripts.Managers
 
         private float _currentMoveTime;
         private float _timeTillNextMove;
+        private bool _gameOver;
 
         protected void Awake()
         {
@@ -30,10 +31,21 @@ namespace Assets.Scripts.Managers
             InitializeSnake();
         }
 
+        protected void OnEnable()
+        {
+            Messenger.AddListener(SnakeEvents.ResetGame, InitializeSnake);
+        }
+
+        protected void OnDisable()
+        {
+            Messenger.RemoveListener(SnakeEvents.ResetGame, InitializeSnake);
+        }
+
         public void InitializeSnake()
         {
+            _gameOver = false;
             Head.transform.position = _startPosition;
-            foreach (BodySegment bodySegment in Body)
+            foreach (var bodySegment in Body)
                 Destroy(bodySegment.gameObject);
             Body.Clear();
             _currentMoveTime = StartMoveTime;
@@ -56,7 +68,7 @@ namespace Assets.Scripts.Managers
             Head.MoveHead();
             if (Body.Count <= 0) return;
             var previousPosition = Head.PreviousPosition;
-            foreach (BodySegment bodySegment in Body)
+            foreach (var bodySegment in Body)
             {
                 bodySegment.MoveSegment(previousPosition);
                 previousPosition = bodySegment.PreviousPosition;
@@ -84,6 +96,8 @@ namespace Assets.Scripts.Managers
         {
             //Using half heights because we are working with a 4 coordinate plane,
             //the center of the screen in 0,0;
+
+            if (_gameOver) return;
             var hasHitTop = Head.transform.position.y > ResolutionManager.HalfHeight - Head.Height ||
                             Head.transform.position.y < -ResolutionManager.HalfHeight + Head.Height;
             var hasHitSide = Head.transform.position.x > ResolutionManager.HalfWidth - Head.Width ||
@@ -98,8 +112,9 @@ namespace Assets.Scripts.Managers
 
         private void GameOver()
         {
+            _gameOver = true;
             StopAllCoroutines();
-            UiManager.Instance.DisplayGameOver();
+            Messenger.Broadcast(SnakeEvents.GameOver);
         }
     }
 }

@@ -24,6 +24,18 @@ namespace Assets.Scripts.Managers
             InitializeHud();
         }
 
+        protected void OnEnable()
+        {
+            Messenger<int>.AddListener(SnakeEvents.PlayerScored, OnPlayerScored);
+            Messenger.AddListener(SnakeEvents.GameOver, OnGameOver);
+        }
+
+        protected void OnDisable()
+        {
+            Messenger<int>.RemoveListener(SnakeEvents.PlayerScored, OnPlayerScored);
+            Messenger.RemoveListener(SnakeEvents.GameOver, OnGameOver);
+        }
+
         public void InitializeHud()
         {
             IsGameOver = false;
@@ -35,13 +47,19 @@ namespace Assets.Scripts.Managers
             StartCoroutine(StartTimer());
         }
 
-        public void PlayerScored()
+        public void OnPlayerScored(int points)
         {
-            _score += PointsPerMouse;
+            _score += points;
             UpdateDisplay();
         }
 
-        public void DisplayGameOver()
+        public void OnGameReset()
+        {
+            Messenger.Broadcast(SnakeEvents.ResetGame);
+            InitializeHud();
+        }
+
+        public void OnGameOver()
         {
             IsGameOver = true;
             StopAllCoroutines();

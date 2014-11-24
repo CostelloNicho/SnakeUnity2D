@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: Spawner
+  m_Name: InputManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,12 +36,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 015498759da1c7c4ea53e6a7cfb0b741, type: 3}
+  m_Script: {fileID: 11500000, guid: 96d05aef2e2b1394bbec483193f7fbbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EdgeBufferOffest: .5
-  SpawnAmount: 1
-  SpawnPrefab: {fileID: 100000, guid: 040482cee3b038b43bc607b0f11da454, type: 2}
+  CurrentInputDirection: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -13,7 +13,7 @@ GameObject:
   - 114: {fileID: 11400000}
   - 61: {fileID: 6100000}
   m_Layer: 0
-  m_Name: Head
+  m_Name: Snake
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,8 +70,7 @@ MonoBehaviour:
   Body: []
   BodySegment: {fileID: 100000, guid: 15525d3877ba7dc45a31a0a8fda74654, type: 2}
   Head: {fileID: 11400000}
-  MoveTime: .00999999978
-  StartingSegmentsCount: 3
+  StartMoveTime: .300000012
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1
