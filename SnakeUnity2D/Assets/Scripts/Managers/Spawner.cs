@@ -1,6 +1,5 @@
 ﻿// Copyright 2014 Nicholas Costello <NicholasJCostello@gmail.com>
 
-using Assets.Scripts.Classes;
 using UnityEngine;
 
 namespace Assets.Scripts.Managers

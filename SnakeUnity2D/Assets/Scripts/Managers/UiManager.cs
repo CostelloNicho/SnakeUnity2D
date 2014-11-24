@@ -1,5 +1,6 @@
 ﻿// Copyright 2014 Nicholas Costello <NicholasJCostello@gmail.com>
 
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,14 +10,13 @@ namespace Assets.Scripts.Managers
     public class UiManager : Singleton<UiManager>
     {
         //HUD Objects
-        private const int PointsPerMouse = 100;
         public GameObject GameOverUi;
         public Text HudScoreText;
         public Text HudTimeText;
 
         public bool IsGameOver;
 
-        private float _currentTime;
+        private TimeSpan _timeSpan;
         private int _score;
 
         protected void Start()
@@ -41,7 +41,7 @@ namespace Assets.Scripts.Managers
             IsGameOver = false;
             GameOverUi.SetActive(false);
             _score = 0;
-            _currentTime = 0f;
+            _timeSpan = TimeSpan.Zero;
 
             UpdateDisplay();
             StartCoroutine(StartTimer());
@@ -69,7 +69,9 @@ namespace Assets.Scripts.Managers
         private void UpdateDisplay()
         {
             HudScoreText.text = string.Format("Score: {0}", _score);
-            HudTimeText.text = string.Format("Time: {0}", Mathf.Round(_currentTime));
+            HudTimeText.text = string.Format("{0}:{1}:{2}", 
+                _timeSpan.Minutes, _timeSpan.Seconds, _timeSpan.Milliseconds);
+
         }
 
 
@@ -77,7 +79,7 @@ namespace Assets.Scripts.Managers
         {
             while (enabled)
             {
-                _currentTime += Time.deltaTime;
+               _timeSpan = _timeSpan.Add(TimeSpan.FromSeconds(Time.deltaTime));
                 UpdateDisplay();
                 yield return null;
             }
