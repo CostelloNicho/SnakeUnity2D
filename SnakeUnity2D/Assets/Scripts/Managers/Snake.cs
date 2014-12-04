@@ -18,7 +18,6 @@ namespace Assets.Scripts.Managers
 
         private float _currentMoveTime;
         private float _timeTillNextMove;
-        private bool _gameOver;
 
         protected void Awake()
         {
@@ -43,9 +42,8 @@ namespace Assets.Scripts.Managers
 
         public void InitializeSnake()
         {
-            _gameOver = false;
             Head.transform.position = _startPosition;
-            foreach (var bodySegment in Body)
+            foreach (BodySegment bodySegment in Body)
                 Destroy(bodySegment.gameObject);
             Body.Clear();
             _currentMoveTime = StartMoveTime;
@@ -55,12 +53,13 @@ namespace Assets.Scripts.Managers
 
         public void AddSegment()
         {
-            var segmentPosition = Body.Count < 1 ? Head.PreviousPosition : Body.Last().PreviousPosition;
+            var segmentPosition = Body.Count < 1 ? 
+                Head.PreviousPosition : Body.Last().PreviousPosition;
             var segmentGo = Instantiate(BodySegment) as GameObject;
             var segment = segmentGo.GetComponent<BodySegment>();
             segment.MoveSegment(segmentPosition);
             Body.Add(segment);
-            _currentMoveTime = _currentMoveTime - 0.003f;
+            _currentMoveTime = _currentMoveTime - 0.001f;
         }
 
         private void MoveSegments()
@@ -68,11 +67,12 @@ namespace Assets.Scripts.Managers
             Head.MoveHead();
             if (Body.Count <= 0) return;
             var previousPosition = Head.PreviousPosition;
-            foreach (var bodySegment in Body)
+            foreach (BodySegment bodySegment in Body)
             {
                 bodySegment.MoveSegment(previousPosition);
                 previousPosition = bodySegment.PreviousPosition;
             }
+            CheckForGameOver();
         }
 
         protected IEnumerator MovementTimer()
@@ -92,12 +92,11 @@ namespace Assets.Scripts.Managers
             }
         }
 
-        protected void Update()
+        protected void CheckForGameOver()
         {
             //Using half heights because we are working with a 4 coordinate plane,
             //the center of the screen in 0,0;
 
-            if (_gameOver) return;
             var hasHitTop = Head.transform.position.y > ResolutionManager.HalfHeight - Head.Height ||
                             Head.transform.position.y < -ResolutionManager.HalfHeight + Head.Height;
             var hasHitSide = Head.transform.position.x > ResolutionManager.HalfWidth - Head.Width ||
@@ -112,7 +111,6 @@ namespace Assets.Scripts.Managers
 
         private void GameOver()
         {
-            _gameOver = true;
             StopAllCoroutines();
             Messenger.Broadcast(SnakeEvents.GameOver);
         }

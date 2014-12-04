@@ -14,8 +14,6 @@ namespace Assets.Scripts.Managers
         public Text HudScoreText;
         public Text HudTimeText;
 
-        public bool IsGameOver;
-
         private TimeSpan _timeSpan;
         private int _score;
 
@@ -38,7 +36,6 @@ namespace Assets.Scripts.Managers
 
         public void InitializeHud()
         {
-            IsGameOver = false;
             GameOverUi.SetActive(false);
             _score = 0;
             _timeSpan = TimeSpan.Zero;
@@ -61,7 +58,6 @@ namespace Assets.Scripts.Managers
 
         public void OnGameOver()
         {
-            IsGameOver = true;
             StopAllCoroutines();
             GameOverUi.SetActive(true);
         }

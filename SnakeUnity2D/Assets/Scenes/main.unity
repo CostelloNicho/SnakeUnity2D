@@ -583,7 +583,6 @@ MonoBehaviour:
   GameOverUi: {fileID: 1253226315}
   HudScoreText: {fileID: 953440695}
   HudTimeText: {fileID: 39309376}
-  IsGameOver: 0
 --- !u!1 &1139418919
 GameObject:
   m_ObjectHideFlags: 0
